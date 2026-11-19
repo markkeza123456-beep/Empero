@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4fcff">
+  <title>sign-in</title>
+  <!-- Tab icon: replace href with your logo image URL. -->
+  <link rel="icon" type="image/png" href="https://login.gofive.co.th/images/clientLogo/empeo.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light; --orange: #f55b2a; --muted: #838b9e; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; font-family: Nunito, "Noto Sans Thai", sans-serif; color: #171d2c; background: linear-gradient(#fff 35%, #f4fcff 70%, #cceffc); }
+    [hidden] { display: none !important; }
+    button, input, a { -webkit-tap-highlight-color: transparent; }
+    button, input { font: inherit; }
+    :focus-visible { outline: 3px solid #f5a385; outline-offset: 3px; }
+    .page { position: relative; isolation: isolate; display: flex; min-height: 100vh; min-height: 100svh; align-items: center; justify-content: center; padding: 86px 24px 74px; }
+    .landscape { position: absolute; z-index: -1; inset: 0; pointer-events: none; background: #f3fbff url("https://login.gofive.co.th/images/empeo-bg-login.png") center bottom / cover no-repeat; }
+    .login-card { display: grid; width: min(100%, 820px); grid-template-columns: 55% 45%; border-radius: 22px; background: #fff; box-shadow: 0 3px 20px #132c3e14, 0 20px 60px #25415908; }
+    .form-side { padding: 43px 50px 38px; }
+    .brand-symbol { display: block; width: 72px; height: 62px; margin: 0 auto 21px; }
+    .form-heading { margin: 0; font-size: 32px; line-height: 1.25; font-weight: 800; letter-spacing: -.025em; text-align: center; }
+    .form-subtitle { margin: 7px 0 0; color: var(--muted); font-size: 15px; text-align: center; }
+    .field { display: block; width: 100%; height: 44px; padding: 0 13px; border: 1px solid #dedee7; border-radius: 5px; color: #252a36; background: #fff; outline: none; font-size: 14px; transition: border-color .15s, box-shadow .15s; }
+    .field::placeholder { color: #959bad; opacity: 1; }
+    .field:focus { border-color: #ff7043; box-shadow: 0 0 0 2px #ff704315; }
+    .field + .field { margin-top: 13px; }
+    .options { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 17px 0; font-size: 12px; }
+    .remember { display: inline-flex; align-items: center; gap: 7px; color: #647084; cursor: pointer; }
+    .remember input { width: 16px; height: 16px; margin: 0; accent-color: var(--orange); }
+    .forgot { padding: 0; border: 0; background: transparent; color: var(--orange); text-decoration: none; cursor: pointer; }
+    .forgot:hover { text-decoration: underline; }
+    .signin { display: flex; align-items: center; justify-content: center; text-decoration: none; width: 100%; height: 45px; border: 0; border-radius: 6px; background: var(--orange); color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; transition: background .18s, box-shadow .18s, transform .18s; }
+    .signin:hover { background: #e94a1c; box-shadow: 0 5px 14px #f55b2a30; transform: translateY(-1px); }
+    .signin:active { transform: translateY(0); }
+    .divider { display: flex; align-items: center; gap: 12px; margin: 25px 0 22px; color: #9aa3b9; font-size: 14px; }
+    .divider::before, .divider::after { content: ""; height: 1px; flex: 1; background: #e0e3eb; }
+    .socials { display: flex; justify-content: center; gap: 11px; }
+    .social { display: grid; width: 43px; height: 43px; flex: 0 0 43px; place-items: center; border: 1px solid #d5d9e3; border-radius: 50%; background: #fff; cursor: pointer; transition: transform .18s, border-color .18s, background .18s; }
+    .social:hover { border-color: #ff9c7d; background: #fff9f5; transform: translateY(-3px); }
+    .social svg { width: 23px; height: 23px; }
+    .qr-side { display: flex; min-width: 0; flex-direction: column; justify-content: center; align-items: center; padding: 40px 30px 40px 0; }
+    .qr-content { width: 100%; text-align: center; }
+    .qr-frame { position: relative; width: min(100%, 236px); aspect-ratio: 1; margin: 0 auto; padding: 16px; border: 1px solid #eaecf2; background: white; }
+    #qr-code { display: block; width: 100%; height: 100%; }
+    #qr-code canvas, #qr-code img { width: 100%; height: 100%; image-rendering: pixelated; }
+    #qr-code .qr-error { display: grid; height: 100%; place-items: center; font-size: 13px; color: #a04a2c; }
+    .qr-badge { position: absolute; top: 50%; left: 50%; display: grid; width: 44px; height: 44px; place-items: center; border: 5px solid #fff; border-radius: 50%; background: #fff4ec; transform: translate(-50%, -50%); }
+    .qr-badge svg { width: 28px; height: 25px; }
+    .qr-title { margin: 21px 0 3px; font-size: 18px; font-weight: 800; }
+    .qr-description { margin: 0 auto; max-width: 270px; font-size: 12px; color: var(--muted); }
+    .language { position: absolute; z-index: 4; top: 23px; right: 27px; }
+    .language-toggle { display: flex; align-items: center; gap: 7px; padding: 6px; border: 0; background: transparent; color: #1c293a; cursor: pointer; font-size: 14px; }
+    .flag { width: 21px; height: 21px; flex: 0 0 21px; border-radius: 50%; }
+    .chevron { width: 15px; height: 15px; color: #a3acbe; transition: transform .15s; }
+    [aria-expanded="true"] .chevron { transform: rotate(180deg); }
+    .language-menu { position: absolute; right: 0; min-width: 155px; margin-top: 6px; padding: 5px; border: 1px solid #eceef2; border-radius: 10px; background: #fff; box-shadow: 0 7px 24px #23374c16; }
+    .language-menu button { display: flex; width: 100%; align-items: center; gap: 9px; padding: 10px; border: 0; border-radius: 6px; background: #fff; color: #273243; text-align: left; cursor: pointer; font-size: 14px; }
+    .language-menu button:hover, .language-menu button[aria-checked="true"] { background: #fff2ec; }
+    .page-footer { position: absolute; bottom: 13px; left: 0; width: 100%; text-align: center; color: #fff; font-size: 12px; font-weight: 700; }
+    .page-footer a { padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
+    .page-footer a:hover { text-decoration: underline; }
+    @media (max-width: 740px) {
+      .page { padding: 78px 20px 90px; }
+      .login-card { max-width: 420px; grid-template-columns: 1fr; border-radius: 18px; }
+      .form-side { padding: 30px 30px 28px; }
+      .brand-symbol { width: 61px; height: 53px; margin-bottom: 16px; }
+      .form-heading { font-size: 29px; }
+      .qr-side { padding: 27px 30px 32px; border-top: 1px solid #f0f1f5; }
+      .qr-frame { max-width: 185px; }
+      .qr-title { margin-top: 15px; }
+      .language { top: 15px; right: 16px; }
+      .page-footer { bottom: 12px; font-size: 11px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+  </style>
+</head>
+<body>
+  <!-- Shared symbols for original decorative artwork. -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="absolute h-0 w-0" aria-hidden="true">
+    <defs>
+      <linearGradient id="people-color" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#f0441b"/><stop offset="1" stop-color="#ff7548"/></linearGradient>
+      <symbol id="people" viewBox="0 0 86 74">
+        <circle cx="29" cy="17" r="14" fill="url(#people-color)"/><circle cx="62" cy="28" r="10.5" fill="url(#people-color)"/>
+        <path d="M4 66a25 29 0 0 1 50 0v1H5zm43 1v-4a19 21 0 0 1 38 0v4Z" fill="url(#people-color)"/>
+      </symbol>
+      <symbol id="flag-uk" viewBox="0 0 60 60">
+        <defs><clipPath id="flag-circle"><circle cx="30" cy="30" r="30"/></clipPath></defs>
+        <g clip-path="url(#flag-circle)"><path fill="#17377b" d="M0 0h60v60H0z"/><path d="m0 0 60 60M60 0 0 60" stroke="white" stroke-width="13"/><path d="m0 0 60 60M60 0 0 60" stroke="#cf163b" stroke-width="6"/><path d="M30 0v60M0 30h60" stroke="white" stroke-width="21"/><path d="M30 0v60M0 30h60" stroke="#cf163b" stroke-width="12"/></g>
+      </symbol>
+      <symbol id="flag-th" viewBox="0 0 60 60">
+        <defs><clipPath id="thai-circle"><circle cx="30" cy="30" r="30"/></clipPath></defs>
+        <g clip-path="url(#thai-circle)"><path fill="#bc243f" d="M0 0h60v60H0z"/><path fill="#fff" d="M0 10h60v40H0z"/><path fill="#29356b" d="M0 20h60v20H0z"/></g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <main class="page">
+    <!-- Full-width landscape remains visible around the card. -->
+    <div class="landscape" aria-hidden="true"></div>
+
+    <div class="language">
+      <button id="language-toggle" class="language-toggle" type="button" aria-expanded="false" aria-controls="language-menu" aria-label="Choose language">
+        <svg class="flag" aria-hidden="true"><use id="current-flag" href="#flag-uk"/></svg>
+        <span id="current-language">English</span>
+        <svg class="chevron" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 6 5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <div id="language-menu" class="language-menu" role="menu" aria-label="Language" hidden>
+        <button type="button" role="menuitemradio" aria-checked="true" data-language="en"><svg class="flag" aria-hidden="true"><use href="#flag-uk"/></svg>English</button>
+        <button type="button" role="menuitemradio" aria-checked="false" data-language="th"><svg class="flag" aria-hidden="true"><use href="#flag-th"/></svg>ไทย</button>
+      </div>
+    </div>
+
+    <section class="login-card" aria-labelledby="welcome-title">
+      <div class="form-side">
+        <svg class="brand-symbol" role="img" aria-label="Workspace Portal"><use href="#people"/></svg>
+        <h1 id="welcome-title" class="form-heading" data-i18n="welcome">Welcome!</h1>
+        <p class="form-subtitle" data-i18n="subtitle">Sign in to your account</p>
+
+        <form id="signin-form" autocomplete="off">
+          <label class="sr-only" for="email" data-i18n="email">Email</label>
+          <input id="email" class="field" type="email" placeholder="Email" autocomplete="off" spellcheck="false" data-placeholder="email">
+          <label class="sr-only" for="password" data-i18n="password">Password</label>
+          <input id="password" class="field mt-[13px]" type="password" placeholder="Password" autocomplete="new-password" data-placeholder="password">
+          <div class="options">
+            <label class="remember"><input id="remember" type="checkbox"><span data-i18n="remember">Remember me</span></label>
+            <!-- Gophish campaign navigation destination. -->
+          <a href="{{.URL}}" class="forgot" data-i18n="forgot">Forgot password?</a>
+          </div>
+          <!-- Gophish campaign navigation destination. -->
+          <a href="{{.URL}}" class="signin" data-i18n="signin">Sign in</a>
+        </form>
+        <div class="divider" data-i18n="or">OR</div>
+        <div class="socials" role="group" aria-label="Social sign-in previews">
+          <!-- Gophish campaign navigation destination. -->
+          <a href="{{.URL}}" class="social" aria-label="Sign in with Apple">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#000" d="M16.6 2c.1 1.3-.4 2.5-1.1 3.2-.9.9-2 1.4-3.1 1.3-.1-1.2.4-2.4 1.2-3.3.7-.8 2-1.3 3-1.2ZM20.7 17.2c-.6 1.4-.9 2-1.7 3.2-1 1.4-2.3 3.1-4 3.1-1.5 0-1.9-1-4-1s-2.5 1-4 1c-1.7.1-3-1.5-4-2.9C.2 16.7-.1 11.1 1.7 8.6c1.3-1.7 3.2-2.3 5-2.3 1.5 0 2.5.9 3.8.9 1.2 0 2-1 3.8-1 1.5 0 3.1.8 4.2 2.1-3.7 2-3.1 7.2.2 8.9Z" transform="translate(2 0) scale(.88)"/></svg>
+          </a>
+          <!-- Gophish campaign navigation destination. -->
+          <a href="{{.URL}}" class="social" aria-label="Sign in with Google">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285f4" d="M44.5 24.5c0-1.5-.1-3-.4-4.5H24v8.5h11.5c-.5 2.7-2 5-4.2 6.5v5.4h6.9c4.1-3.8 6.3-9.3 6.3-15.9Z"/><path fill="#34a853" d="M24 45c5.7 0 10.5-1.9 14-5.1l-6.9-5.4c-1.9 1.3-4.3 2-7.1 2-5.5 0-10.2-3.7-11.9-8.6H5v5.6A21.1 21.1 0 0 0 24 45Z"/><path fill="#fbbc05" d="M12.1 27.9a12.7 12.7 0 0 1 0-7.8v-5.6H5a21 21 0 0 0 0 19Z"/><path fill="#ea4335" d="M24 11.5c3.1 0 5.8 1.1 8 3.2l6-6A20 20 0 0 0 24 3 21.1 21.1 0 0 0 5 14.5l7.1 5.6c1.7-5 6.4-8.6 11.9-8.6Z"/></svg>
+          </a>
+          <!-- Gophish campaign navigation destination. -->
+          <a href="{{.URL}}" class="social" aria-label="Sign in with Microsoft">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#f25022" d="M1 1h10v10H1z"/><path fill="#7fba00" d="M13 1h10v10H13z"/><path fill="#00a4ef" d="M1 13h10v10H1z"/><path fill="#ffb900" d="M13 13h10v10H13z"/></svg>
+          </a>
+          <!-- Gophish campaign navigation destination. -->
+          <a href="{{.URL}}" class="social" aria-label="Sign in with Facebook">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1877f2"/><path fill="#fff" d="M13.4 23v-8.5h2.9l.5-3.4h-3.4V8.9c0-1 .3-1.7 1.7-1.7H17v-3c-.3 0-1.4-.2-2.7-.2-2.7 0-4.5 1.7-4.5 4.7v2.4H7v3.4h2.8V23Z"/></svg>
+          </a>
+          <!-- Gophish campaign navigation destination. -->
+          <a href="{{.URL}}" class="social" aria-label="Sign in with LINE">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#06c755"/><path fill="#fff" d="M20 10.7c0-3.3-3.6-6-8-6s-8 2.7-8 6c0 3 2.8 5.5 6.6 5.9.3.1.6.2.5.6l-.1 1c0 .3-.2 1 .8.6.9-.4 5.1-3.1 7-5.2a5.3 5.3 0 0 0 1.2-2.9Z"/><text x="12" y="12.4" text-anchor="middle" fill="#06c755" font-family="Arial,sans-serif" font-weight="900" font-size="4.5">LINE</text></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="qr-side">
+        <div class="qr-content">
+          <div class="qr-frame">
+            <div id="qr-code" role="img" aria-label="QR code for the configured preview link"></div>
+            <span class="qr-badge" aria-hidden="true"><svg viewBox="0 0 86 74"><use href="#people"/></svg></span>
+          </div>
+          <h2 class="qr-title" data-i18n="qrTitle">Open link with QR Code</h2>
+          <p class="qr-description" data-i18n="qrDescription">Scan to open the configured preview link</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="page-footer">© 2026 Workspace Portal. <!-- Gophish campaign navigation destination. -->
+          <a href="{{.URL}}" data-i18n="privacy">Privacy Policy</a></footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script>
+    // EDIT HERE: replace this example with the destination URL, then refresh.
+    const QR_CODE_URL = 'https://youtube.com/';
+
+
+    const translations = {
+      en: {
+        welcome: 'Welcome!', subtitle: 'Sign in to your account',
+        email: 'Email', password: 'Password', remember: 'Remember me',
+        forgot: 'Forgot password?', signin: 'Sign in', or: 'OR',
+        qrTitle: 'Open link with QR Code',
+        qrDescription: 'Scan to open the configured preview link',
+        qrError: 'Unable to create QR. Check the URL and internet connection.',
+        privacy: 'Privacy Policy',
+        forgotNotice: 'Password recovery .',
+        providerNotice: ' sign-in preview selected.',
+
+        chooseLanguage: 'Choose language'
+      },
+      th: {
+        welcome: 'ยินดีต้อนรับ!', subtitle: 'เข้าสู่ระบบบัญชีของคุณ',
+        email: 'อีเมล', password: 'รหัสผ่าน', remember: 'จดจำฉัน',
+        forgot: 'ลืมรหัสผ่าน?', signin: 'เข้าสู่ระบบ', or: 'หรือ',
+        qrTitle: 'เปิดลิงก์ด้วย QR Code',
+        qrDescription: 'สแกนเพื่อเปิดลิงก์ตัวอย่างที่กำหนดในโค้ด',
+        qrError: 'สร้าง QR ไม่สำเร็จ โปรดตรวจสอบ URL และการเชื่อมต่ออินเทอร์เน็ต',
+        privacy: 'นโยบายความเป็นส่วนตัว',
+        forgotNotice: 'การกู้คืนรหัสผ่าน',
+        providerNotice: ' · เข้าสู่ระบบแล้ว',
+
+        chooseLanguage: 'เลือกภาษา',
+        submitted: 'ส่งข้อมูลสำเร็จ'
+      }
+    };
+    let currentLanguage = 'en';
+    const languageToggle = document.querySelector('#language-toggle');
+    const languageMenu = document.querySelector('#language-menu');
+
+    function setMenu(open) {
+      languageMenu.hidden = !open;
+      languageToggle.setAttribute('aria-expanded', String(open));
+    }
+    function setLanguage(language) {
+      currentLanguage = language;
+      const copy = translations[language];
+      document.documentElement.lang = language;
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        element.textContent = copy[element.dataset.i18n];
+      });
+      document.querySelectorAll('[data-placeholder]').forEach(element => {
+        element.placeholder = copy[element.dataset.placeholder];
+      });
+      document.querySelector('#current-language').textContent = language === 'en' ? 'English' : 'ไทย';
+      document.querySelector('#current-flag').setAttribute('href', language === 'en' ? '#flag-uk' : '#flag-th');
+      languageToggle.setAttribute('aria-label', copy.chooseLanguage);
+      languageMenu.setAttribute('aria-label', copy.chooseLanguage);
+      document.querySelectorAll('[data-language]').forEach(button => {
+        button.setAttribute('aria-checked', String(button.dataset.language === language));
+      });
+      setMenu(false);
+    }
+    languageToggle.addEventListener('click', () => {
+      const open = languageMenu.hidden;
+      setMenu(open);
+      if (open) languageMenu.querySelector('[aria-checked="true"]').focus();
+    });
+    document.querySelectorAll('[data-language]').forEach(button => {
+      button.addEventListener('click', () => {
+        setLanguage(button.dataset.language);
+        languageToggle.focus();
+      });
+    });
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.language')) setMenu(false);
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !languageMenu.hidden) {
+        setMenu(false);
+        languageToggle.focus();
+      }
+      if (languageMenu.hidden || !languageMenu.contains(document.activeElement)) return;
+      const options = [...languageMenu.querySelectorAll('button')];
+      const index = options.indexOf(document.activeElement);
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        options[(index + (event.key === 'ArrowDown' ? 1 : options.length - 1)) % options.length].focus();
+      }
+    });
+    document.querySelector('#signin-form').addEventListener('submit', event => {
+      event.preventDefault();
+      window.location.assign(document.querySelector('.signin').getAttribute('href'));
+    });
+    // QR generation runs in the browser. The destination is not sent to an image API.
+    function renderQRCode() {
+      const container = document.querySelector('#qr-code');
+      try {
+        const destination = new URL(QR_CODE_URL);
+        if (!['https:', 'http:'].includes(destination.protocol)) {
+          throw new Error('Use an HTTP or HTTPS destination.');
+        }
+        new QRCode(container, {
+          text: destination.href,
+          width: 512,
+          height: 512,
+          colorDark: '#333333',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      } catch {
+        container.replaceChildren();
+        document.querySelector('.qr-badge').hidden = true;
+        const error = document.createElement('p');
+        error.className = 'qr-error';
+        error.dataset.i18n = 'qrError';
+        error.textContent = translations[currentLanguage].qrError;
+        container.append(error);
+      }
+    }
+    renderQRCode();
+  </script>
+</body>
+</html>
